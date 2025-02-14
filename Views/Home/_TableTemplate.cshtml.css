@@ -1,0 +1,69 @@
+.table {
+    gap: 10px;
+    width: 100%;
+}
+
+.table-header {
+    background-color: #f7f7f7;
+    gap: 20px;
+}
+
+.table-header-item {
+    font-weight: 700;
+    font-size: 14px;
+    padding: 16px 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.table-body {
+    gap: 20px;
+    border-bottom: 1px solid #f7f7f7;
+}
+
+.table-body:hover {
+    background-color: #f7f7f7;
+}
+
+.table-body-item {
+    font-weight: 400;
+    font-size: 14px;
+    padding: 16px 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.goodBadge {
+    width: 61px;
+    height: 28px;
+    border-radius: 4px;
+    padding: 6px 12px 6px 12px;
+    background-color: rgba(0, 153, 255, 0.15);
+    color: #0099ff;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.normalBadge {
+    width: 61px;
+    height: 28px;
+    border-radius: 4px;
+    padding: 6px 12px;
+    background-color: rgba(133, 133, 133, 0.15);
+    color: #999999;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.badBadge {
+    width: 61px;
+    height: 28px;
+    border-radius: 4px;
+    padding: 6px 12px;
+    background-color: rgba(255, 34, 34, 0.15);
+    color: #ff2222;
+    font-size: 14px;
+    font-weight: 700;
+}
