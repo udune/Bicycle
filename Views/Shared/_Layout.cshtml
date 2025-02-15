@@ -21,14 +21,14 @@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">홈</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Student">후기 게시판</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Review">리뷰 게시판</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
+                    @* <li class="nav-item"> *@
+                    @*     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> *@
+                    @* </li> *@
                 </ul>
                 <partial name="_LoginPartial"/>
             </div>
@@ -43,7 +43,7 @@
 
 <footer class="border-top footer text-muted">
     <div class="container">
-        &copy; 2025 - 따릉따릉 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        &copy; 따릉따릉 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Copyright 2025. 김민찬 All cannot be copied without permission</a>
     </div>
 </footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>

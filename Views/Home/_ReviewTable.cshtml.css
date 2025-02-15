@@ -67,3 +67,10 @@
     font-size: 14px;
     font-weight: 700;
 }
+
+.emptyText {
+    font-weight: 700;
+    font-size: 14px;
+    text-align: center;
+    padding: 30px;
+}

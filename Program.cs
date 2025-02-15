@@ -23,6 +23,7 @@ public class Program
         builder.Services.AddTransient<DBSeeder>();
         builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
         builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+        builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
         var app = builder.Build();
         

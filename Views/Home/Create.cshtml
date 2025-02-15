@@ -1,0 +1,72 @@
+@model Bicycle.ViewModels.ReviewViewModel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.27.3/ui/trumbowyg.min.css">
+
+<form enctype="multipart/form-data" method="POST">
+    <div class="form-group" style="margin-bottom: 10px">
+        <label>제목</label>
+        <input type="text" class="form-control" asp-for="@Model.Review.Title" placeholder="제목을 입력해 주세요"/>
+        <span asp-validation-for="@Model.Review.Title"></span>
+    </div>
+    <div class="form-group" style="margin-bottom: 10px">
+        <label>이름</label>
+        <input type="text" class="form-control" asp-for="@Model.Review.Name" placeholder="홍길동"/>
+        <span asp-validation-for="@Model.Review.Name"></span>
+    </div>
+    <div class="form-group" style="margin-bottom: 10px">
+        <label>따릉이 번호</label>
+        <input type="text" class="form-control" asp-for="@Model.Review.Number" placeholder="77777"/>
+        <span asp-validation-for="@Model.Review.Number"></span>
+    </div>
+    <div class="form-group" style="margin-bottom: 10px">
+        <label>이용 날짜</label>
+        <input type="date" class="form-control" asp-for="@Model.Review.Date"/>
+        <span asp-validation-for="@Model.Review.Date"></span>
+    </div>
+    <div class="form-group" style="margin-bottom: 10px">
+        <label>평점</label>
+        <input type="number" value="9" class="form-control" asp-for="@Model.Review.Rating" placeholder="1 ~ 10"/>
+        <span asp-validation-for="@Model.Review.Rating"></span>
+    </div>
+    <div class="form-group" style="margin-bottom: 10px">
+        <label>후기</label>
+        <textarea class="form-control" id="trumbowyg-demo" asp-for="@Model.Review.Contents" placeholder="후기(특이 사항)을 입력해 주세요"></textarea>
+        <span asp-validation-for="@Model.Review.Contents"></span>
+    </div>
+    <div style="margin-bottom: 10px">
+        <input type="file" name="UploadFile" id="UploadFile" onchange="fileSize()" value=""/><br/>
+    </div>
+    <button type="submit" class="btn btn-primary" style="display: flex; justify-self: end;">올리기</button>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.27.3/trumbowyg.min.js"></script>
+    <script>$('#trumbowyg-demo').trumbowyg();
+        function fileSize() {
+            if (!window.FileReader) {
+                console.log("해당 웹 브라우저에서는 파일 업로드가 아직 지원 되지 않습니다. ");
+                return;
+            }
+
+            var input = document.getElementById('UploadFile');
+            if (!input.files) {
+                console.error("input 태그 없음.");
+            } else if (!input.files[0]) {
+                // alert("파일 선택 해 주세요'");
+            } else {
+                var file = input.files[0];
+                if (file.size > 2097152) {
+                    alert("2MB를 초과할 수 없습니다.");
+                    input.value = "";
+                }
+            }
+        }
+    </script>
+}

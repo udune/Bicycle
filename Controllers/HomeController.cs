@@ -10,16 +10,103 @@ public class HomeController : Controller
 {
     private readonly ITeacherRepository _TeacherRepository;
     private readonly IStudentRepository _StudentRepository;
+    private readonly IReviewRepository _ReviewRepository;
 
-    public HomeController(ITeacherRepository teacherRepository, IStudentRepository studentRepository)
+    public HomeController(ITeacherRepository teacherRepository, IStudentRepository studentRepository, IReviewRepository reviewRepository)
     {
         _TeacherRepository = teacherRepository;
         _StudentRepository = studentRepository;
+        _ReviewRepository = reviewRepository;
     }
 
     public IActionResult Index()
     {
         return View();
+    }
+
+    public IActionResult Review()
+    {
+        var viewModel = new ReviewViewModel()
+        {
+            Reviews = _ReviewRepository.GetAllReviews()
+        };
+        return View(viewModel);
+    }
+
+    public IActionResult Create()
+    {
+        var viewModel = new ReviewViewModel();
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Create(ReviewViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            _ReviewRepository.AddReview(model.Review);
+            _ReviewRepository.Save();
+            ModelState.Clear();
+        }
+        else
+        {
+            ModelState.AddModelError("Create", "Invalid data");
+        }
+
+        return RedirectToAction("Review");
+    }
+
+    public IActionResult Detail(int id)
+    {
+        var viewModel = new ReviewViewModel()
+        {
+            Review = _ReviewRepository.GetReview(id)
+        };
+
+        return View(viewModel);
+    }
+    
+    public IActionResult Edit(int id)
+    {
+        var viewModel = new ReviewViewModel()
+        {
+            Review = _ReviewRepository.GetReview(id)
+        };
+        
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Edit(ReviewViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            _ReviewRepository.Edit(model.Review);
+            _ReviewRepository.Save();
+            
+            return RedirectToAction("Review");
+        }
+
+        var viewModel = new ReviewViewModel()
+        {
+            Review = model.Review,
+        };
+        
+        return View(viewModel);
+    }
+    
+    public IActionResult Delete(int id)
+    {
+        var result = _ReviewRepository.GetReview(id);
+        if (result != null)
+        {
+            _ReviewRepository.Delete(result);
+            _ReviewRepository.Save();
+        }
+        
+        return RedirectToAction("Review");
     }
 
     public IActionResult Student()
@@ -55,58 +142,6 @@ public class HomeController : Controller
         };
         
         return View(viewModel);
-    }
-
-    public IActionResult Detail(int id)
-    {
-        var viewModel = new StudentTeacherViewModel()
-        {
-            Student = _StudentRepository.GetStudent(id)
-        };
-
-        return View(viewModel);
-    }
-
-    public IActionResult Edit(int id)
-    {
-        var viewModel = new StudentTeacherViewModel()
-        {
-            Student = _StudentRepository.GetStudent(id)
-        };
-        
-        return View(viewModel);
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Edit(StudentTeacherViewModel model)
-    {
-        if (ModelState.IsValid)
-        {
-            _StudentRepository.Edit(model.Student);
-            _StudentRepository.Save();
-            
-            return RedirectToAction("Student");
-        }
-
-        var viewModel = new StudentTeacherViewModel()
-        {
-            Student = model.Student,
-        };
-        
-        return View(viewModel);
-    }
-    
-    public IActionResult Delete(int id)
-    {
-        var result = _StudentRepository.GetStudent(id);
-        if (result != null)
-        {
-            _StudentRepository.Delete(result);
-            _StudentRepository.Save();
-        }
-        
-        return RedirectToAction("Student");
     }
 
     public IActionResult Privacy()

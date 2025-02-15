@@ -1,12 +1,50 @@
-@model Bicycle.ViewModels.StudentTeacherViewModel
+@model Bicycle.ViewModels.ReviewViewModel
 
 @{
     ViewBag.Title = "Detail";
 }
 
-<h2>학생 정보</h2>
-<hr/>
-<h3>아이디: @Model.Student.Id</h3>
-<h3>이름: @Model.Student.Name</h3>
-<h3>나이: @Model.Student.Age</h3>
-<h3>국가: @Model.Student.Country</h3>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.27.3/ui/trumbowyg.min.css">
+
+<form>
+    <div class="form-group" style="margin-bottom: 10px">
+        <label>제목</label>
+        <input type="text" class="form-control" asp-for="@Model.Review.Title" disabled/>
+        <span asp-validation-for="@Model.Review.Title"></span>
+    </div>
+    <div class="form-group" style="margin-bottom: 10px">
+        <label>이름</label>
+        <input type="text" class="form-control" asp-for="@Model.Review.Name" disabled/>
+        <span asp-validation-for="@Model.Review.Name"></span>
+    </div>
+    <div class="form-group" style="margin-bottom: 10px">
+        <label>따릉이 번호</label>
+        <input type="text" class="form-control" asp-for="@Model.Review.Number" disabled/>
+        <span asp-validation-for="@Model.Review.Number"></span>
+    </div>
+    <div class="form-group" style="margin-bottom: 10px">
+        <label>이용 날짜</label>
+        <input type="date" class="form-control" asp-for="@Model.Review.Date" disabled/>
+        <span asp-validation-for="@Model.Review.Date"></span>
+    </div>
+    <div class="form-group" style="margin-bottom: 10px">
+        <label>평점</label>
+        <input type="number" value="9" class="form-control" asp-for="@Model.Review.Rating" disabled/>
+        <span asp-validation-for="@Model.Review.Rating"></span>
+    </div>
+    <div class="form-group" style="margin-bottom: 10px">
+        <label>후기</label>
+        <textarea class="form-control" id="trumbowyg-demo" asp-for="@Model.Review.Contents" disabled></textarea>
+        <span asp-validation-for="@Model.Review.Contents"></span>
+    </div>
+    <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <a class="btn btn-primary" asp-controller="Home" asp-action="Review">뒤로</a>
+    </div>
+</form>
+
+@section Scripts {
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.27.3/trumbowyg.min.js"></script>
+    <script>$('#trumbowyg-demo').trumbowyg();</script>
+}
