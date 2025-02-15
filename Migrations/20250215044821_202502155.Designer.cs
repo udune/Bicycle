@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bicycle.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250214151157_202502151")]
-    partial class _202502151
+    [Migration("20250215044821_202502155")]
+    partial class _202502155
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,31 @@ namespace Bicycle.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
+
+            modelBuilder.Entity("Bicycle.Models.FileModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("FileUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("OriginalName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("OriginalType")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Files");
+                });
 
             modelBuilder.Entity("Bicycle.Models.Review", b =>
                 {
@@ -38,6 +63,9 @@ namespace Bicycle.Migrations
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<int>("FileId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -59,53 +87,9 @@ namespace Bicycle.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FileId");
+
                     b.ToTable("Reviews");
-                });
-
-            modelBuilder.Entity("Bicycle.Models.Student", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Students");
-                });
-
-            modelBuilder.Entity("Bicycle.Models.Teacher", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Class")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Teachers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -306,6 +290,17 @@ namespace Bicycle.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Bicycle.Models.Review", b =>
+                {
+                    b.HasOne("Bicycle.Models.FileModel", "File")
+                        .WithMany()
+                        .HasForeignKey("FileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("File");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

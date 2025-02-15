@@ -1,4 +1,5 @@
 using Bicycle.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bicycle.Data.Repositories;
 
@@ -20,7 +21,16 @@ public class ReviewRepository : IReviewRepository
     {
         var review = _context.Reviews
             .FirstOrDefault(x => x.Id == id);
+        if (review != null)
+            review.File = GetFile(review.FileId);
         return review;
+    }
+
+    public FileModel GetFile(int fileId)
+    {
+        var file = _context.FileModel
+            .FirstOrDefault(x => x.Id == fileId);
+        return file;
     }
 
     public IEnumerable<Review> GetAllReviews()
@@ -42,5 +52,16 @@ public class ReviewRepository : IReviewRepository
     public void Delete(Review review)
     {
         _context.Remove(review);
+        _context.Remove(review.File);
+    }
+
+    public void DeleteFile(FileModel file)
+    {
+        _context.Remove(file);
+    }
+
+    public void Detach(Review review)
+    {
+        _context.Entry(review).State = EntityState.Detached;
     }
 }

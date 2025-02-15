@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Bicycle.Data;
 using Bicycle.Data.Repositories;
+using Microsoft.Extensions.FileProviders;
 using MySql.Data.MySqlClient;
 
 namespace Bicycle;
@@ -21,8 +22,6 @@ public class Program
             .AddEntityFrameworkStores<ApplicationDbContext>();
         builder.Services.AddControllersWithViews();
         builder.Services.AddTransient<DBSeeder>();
-        builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
-        builder.Services.AddScoped<IStudentRepository, StudentRepository>();
         builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
         var app = builder.Build();
@@ -45,7 +44,6 @@ public class Program
         app.UseRouting();
 
         app.UseAuthorization();
-
         app.MapStaticAssets();
         app.MapControllerRoute(
             name: "default",

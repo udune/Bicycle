@@ -27,4 +27,8 @@ public class Review
     [Range(1, 10)]
     [Required]
     public int Rating { get; set; }
+    
+    public int FileId { get; set; }
+    
+    public FileModel File { get; set; } = new FileModel();
 }

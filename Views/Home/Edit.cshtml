@@ -8,6 +8,11 @@ ViewBag.Title = "Create";
 
 <form enctype="multipart/form-data" method="POST">
     <input type="hidden" asp-for="@Model.Review.Id"/>
+    <input type="hidden" asp-for="@Model.Review.File.Id"/>
+    <input type="hidden" asp-for="@Model.Review.File.FileName"/>
+    <input type="hidden" asp-for="@Model.Review.File.FileUrl"/>
+    <input type="hidden" asp-for="@Model.Review.File.OriginalName"/>
+    <input type="hidden" asp-for="@Model.Review.File.OriginalType"/>
     <div class="form-group" style="margin-bottom: 10px">
         <label>제목</label>
         <input type="text" class="form-control" asp-for="@Model.Review.Title"/>
@@ -37,6 +42,9 @@ ViewBag.Title = "Create";
         <label>후기</label>
         <textarea class="form-control" id="trumbowyg-demo" asp-for="@Model.Review.Contents"></textarea>
         <span asp-validation-for="@Model.Review.Contents"></span>
+    </div>
+    <div class="form-group" style="margin-bottom: 10px">
+        <img src="@Model.Review.File.FileUrl" alt=""/>
     </div>
     <div style="margin-bottom: 10px">
         <input type="file" name="UploadFile" id="UploadFile" onchange="fileSize()" value=""/><br/>
