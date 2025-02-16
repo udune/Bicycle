@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Bicycle.Data.Repositories;
 using Bicycle.Models;
 using Bicycle.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bicycle.Controllers;
@@ -23,11 +24,17 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult Review()
+    public IActionResult Review(int pageNumber = 1)
     {
+        var reviews = _ReviewRepository.GetAllReviews();
+        var reviewTable = new ReviewTable(
+            reviews.OrderByDescending(review => review.Id).Skip((pageNumber - 1) * 10).Take(10).ToList(), 
+            new ReviewTablePage(reviews.Count(), pageNumber, 10));
+        
         var viewModel = new ReviewViewModel()
         {
-            Reviews = _ReviewRepository.GetAllReviews()
+            Reviews = reviews,
+            ReviewTable = reviewTable
         };
         return View(viewModel);
     }
@@ -40,7 +47,7 @@ public class HomeController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(IFormFile uploadFile, ReviewViewModel model)
+    public async Task<IActionResult> Create(IFormFile? uploadFile, ReviewViewModel model)
     {
         if (ModelState.IsValid)
         {
@@ -86,6 +93,7 @@ public class HomeController : Controller
         return View(viewModel);
     }
     
+    [Authorize]
     public IActionResult Edit(int id)
     {
         var viewModel = new ReviewViewModel()

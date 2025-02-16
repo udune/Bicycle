@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Bicycle.Data;
 using Bicycle.Data.Repositories;
+using Bicycle.Models;
 using Microsoft.Extensions.FileProviders;
 using MySql.Data.MySqlClient;
 
@@ -18,11 +19,23 @@ public class Program
 
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-        builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+        builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+        {
+            options.SignIn.RequireConfirmedEmail = false;
+            options.SignIn.RequireConfirmedAccount = false;
+            options.Lockout.AllowedForNewUsers = false;
+            options.Password.RequireDigit = false;
+            options.Password.RequiredLength = 6;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireUppercase = false;
+            options.Password.RequireLowercase = false;
+        }).AddEntityFrameworkStores<ApplicationDbContext>();
+        
         builder.Services.AddControllersWithViews();
         builder.Services.AddTransient<DBSeeder>();
         builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+        builder.Services.AddScoped<UserManager<IdentityUser>>();
+        builder.Services.AddScoped<SignInManager<IdentityUser>>();
 
         var app = builder.Build();
         

@@ -44,7 +44,7 @@ namespace Bicycle.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Files");
+                    b.ToTable("FileModel");
                 });
 
             modelBuilder.Entity("Bicycle.Models.Review", b =>

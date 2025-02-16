@@ -17,7 +17,8 @@
     {
         @foreach (var review in Model.Reviews)
         {
-            <tr class="table-body" style="cursor: pointer;" onclick="location.href='@Url.Action("Edit", "Home", new { id = review.Id })'">
+            var action = User.Identity.IsAuthenticated && review.Name == User.Identity.Name ? "Edit" : "Detail";
+            <tr class="table-body" style="cursor: pointer;" onclick="location.href='@Url.Action(action, "Home", new { id = review.Id })'">
                 <td class="table-body-item" style="width:10%">@review.Name</td>
                 <td class="table-body-item" style="width:60%">@review.Title</td>
                 <td class="table-body-item" style="width:10%">@review.Number</td>
@@ -38,6 +39,46 @@
                 </td>
             </tr>
         }
+
+        <tr>
+            <td colspan="5">
+                <div class="paginationContainer">
+                    @if (Model.ReviewTable.ReviewTablePage.HasPreviousPage)
+                    {
+                    <a asp-controller="Home" asp-action="Review" asp-route-pageNumber="@(Model.ReviewTable.ReviewTablePage.PageNumber - 1)">
+                        <div class="paginationArrow-button prev"></div>
+                    </a>
+                    }
+                    else
+                    {
+                    <a asp-controller="Home" asp-action="Review" asp-route-pageNumber="1">
+                        <div class="paginationArrow-button prev"></div>
+                    </a>
+                    }
+
+                    @for (var i = 1; i <= Model.ReviewTable.ReviewTablePage.TotalPage; i++)
+                    {
+                    var selectPage = i;
+                    var type = Model.ReviewTable.ReviewTablePage.PageNumber == selectPage ? "selected" : "default";
+                    <button class="pageButton @type" onclick="location.href='@Url.Action("Review", "Home", new { pageNumber = selectPage })'">@i</button>
+                    }
+                    @* <review-table-page page-model="@Model.ReviewTable.ReviewTablePage" paging-action="Index"></review-table-page> *@
+
+                    @if (Model.ReviewTable.ReviewTablePage.HasNextPage)
+                    {
+                    <a asp-controller="Home" asp-action="Review" asp-route-pageNumber="@(Model.ReviewTable.ReviewTablePage.PageNumber + 1)">
+                        <div class="paginationArrow-button next"></div>
+                    </a>
+                    }
+                    else
+                    {
+                    <a asp-controller="Home" asp-action="Review" asp-route-pageNumber="@(Model.ReviewTable.ReviewTablePage.TotalPage)">
+                        <div class="paginationArrow-button next"></div>
+                    </a>
+                    }
+                </div>
+            </td>
+        </tr>
     }
     else
     {
@@ -46,5 +87,5 @@
         </tr>
     }
     </tbody>
-    
+
 </table>

@@ -74,3 +74,49 @@
     text-align: center;
     padding: 30px;
 }
+
+.paginationContainer {
+    display: flex; /* 플렉스 박스로 설정 */
+    justify-content: center; /* 자식 요소를 가로로 중앙 정렬 */
+    align-items: center; /* 자식 요소를 세로로 중앙 정렬 */
+    gap: 8px; /* 버튼 간의 간격 */
+    margin-top: 16px; /* 위쪽 여백 추가 */
+}
+
+.paginationArrow-button {
+    background-image: url("images/PaginationVector.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    width: 8px;
+    height: 15px;
+    border: none;
+    background-color: transparent;
+}
+
+.paginationArrow-button.prev {
+    transform: rotate(0deg);
+}
+
+.paginationArrow-button.next {
+    transform: rotate(180deg);
+}
+
+.pageButton {
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    font-size: 14px;
+    text-align: center;
+    gap: 32px;
+}
+
+.default {
+    color: #000000;
+    font-weight: 400;
+}
+
+.selected {
+    color: #0099FF;
+    font-weight: 700;
+}

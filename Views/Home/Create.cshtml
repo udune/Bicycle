@@ -1,7 +1,9 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Bicycle.ViewModels.ReviewViewModel
 
 @{
     ViewBag.Title = "Create";
+    Model.Review.Name = User.Identity.Name;
 }
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.27.3/ui/trumbowyg.min.css">
@@ -13,8 +15,7 @@
         <span asp-validation-for="@Model.Review.Title"></span>
     </div>
     <div class="form-group" style="margin-bottom: 10px">
-        <label>이름</label>
-        <input type="text" class="form-control" asp-for="@Model.Review.Name" placeholder="홍길동"/>
+        <input type="hidden" class="form-control" asp-for="@Model.Review.Name"/>  
         <span asp-validation-for="@Model.Review.Name"></span>
     </div>
     <div class="form-group" style="margin-bottom: 10px">

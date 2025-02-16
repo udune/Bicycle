@@ -35,7 +35,7 @@ public class ReviewRepository : IReviewRepository
 
     public IEnumerable<Review> GetAllReviews()
     {
-        var reviews = _context.Reviews;
+        var reviews = _context.Reviews.OrderByDescending(x => x.Id);
         return reviews;
     }
     

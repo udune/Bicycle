@@ -1,0 +1,22 @@
+@model Bicycle.ViewModels.LoginViewModel
+
+<div class="col-md-3" style="justify-self: center; margin: 50px;">
+    <h4 style="text-align: center;">로그인</h4>
+    <br/>
+    <form method="POST" class="form-horizontal">
+        <div asp-validation-summary="All"></div>
+        <div class="form-group" style="margin-bottom: 10px;">
+            <label asp-for="@Model.UserName">아이디</label>
+            <input asp-for="@Model.UserName" class="form-control"/>
+            <span asp-validation-for="@Model.UserName"></span>
+        </div>
+        <div class="form-group" style="margin-bottom: 10px;">
+            <label asp-for="@Model.Password">비밀번호</label>
+            <input asp-for="@Model.Password" class="form-control"/>
+            <span asp-validation-for="@Model.Password"></span>
+        </div>
+        <div class="form-group" style="display: flex; justify-content: flex-end;">
+            <button type="submit" class="btn btn-info">로그인</button>
+        </div>
+    </form>
+</div>
