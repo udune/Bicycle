@@ -1,8 +1,11 @@
+using Amazon.Runtime;
+using Amazon.S3;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Bicycle.Data;
 using Bicycle.Data.Repositories;
 using Bicycle.Models;
+using Bicycle.Services;
 using Microsoft.Extensions.FileProviders;
 using MySql.Data.MySqlClient;
 
@@ -33,6 +36,12 @@ public class Program
         
         builder.Services.AddControllersWithViews();
         builder.Services.AddTransient<DBSeeder>();
+        
+        var awsOptions = builder.Configuration.GetSection("AWS");
+        var credentials = new BasicAWSCredentials(awsOptions["AccessKey"], awsOptions["SecretKey"]);
+
+        builder.Services.AddSingleton<IAmazonS3>(sp => new AmazonS3Client(credentials, Amazon.RegionEndpoint.APNortheast2));
+        builder.Services.AddSingleton<AmazonS3Service>();
         builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
         builder.Services.AddScoped<UserManager<IdentityUser>>();
         builder.Services.AddScoped<SignInManager<IdentityUser>>();

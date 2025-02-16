@@ -8,5 +8,5 @@ public class FileModel
     public string? OriginalName { get; set; }
     public string? OriginalType { get; set; }
     public string? FileName { get; set; }
-    public string? FileUrl { get; set; }
+    public string? FileUrl { get; set; } = "https://";
 }

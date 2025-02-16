@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Bicycle.Data.Repositories;
 using Bicycle.Models;
+using Bicycle.Services;
 using Bicycle.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -11,12 +12,12 @@ namespace Bicycle.Controllers;
 public class HomeController : Controller
 {
     private readonly IReviewRepository _ReviewRepository;
-    private readonly IWebHostEnvironment _Environment;
+    private readonly AmazonS3Service _amazonS3Service;
 
-    public HomeController(IReviewRepository reviewRepository, IWebHostEnvironment environment)
+    public HomeController(IReviewRepository reviewRepository, AmazonS3Service amazonS3Service)
     {
         _ReviewRepository = reviewRepository;
-        _Environment = environment;
+        _amazonS3Service = amazonS3Service;
     }
 
     public IActionResult Index()
@@ -53,19 +54,18 @@ public class HomeController : Controller
         {
             if (uploadFile != null)
             {
-                string originalFile = uploadFile.FileName;
-                string fileType = Path.GetExtension(originalFile);
-                string fileName = Guid.NewGuid().ToString();
-                string path = _Environment.WebRootPath + "/files/" + fileName + fileType;
-                await using var fileStream = new FileStream(path, FileMode.Create);
-                await uploadFile.CopyToAsync(fileStream);
+                string originalName = uploadFile.FileName;
+                string originalType = Path.GetExtension(originalName);
+                string key = Guid.NewGuid() + originalType;
+                
+                var fileUrl = await _amazonS3Service.UploadFileAsync(uploadFile, key);
                 
                 FileModel file = new FileModel()
                 {
-                    OriginalName = originalFile,
-                    OriginalType = fileType,
-                    FileName = fileName,
-                    FileUrl = "/files/" + fileName + fileType
+                    OriginalName = originalName,
+                    OriginalType = originalType,
+                    FileName = key,
+                    FileUrl = fileUrl
                 };
 
                 model.Review.File = file;
@@ -118,25 +118,22 @@ public class HomeController : Controller
             {
                 if (existing.File != null)
                 {
-                    string existingPath = Path.Combine(_Environment.WebRootPath, existing.File.FileUrl.TrimStart('/'));
-                    if (System.IO.File.Exists(existingPath))
-                        System.IO.File.Delete(existingPath);
+                    await _amazonS3Service.DeleteFileAsync(existing.File.FileName);
                     _ReviewRepository.DeleteFile(existing.File);
                 }
                 
-                string originalFile = uploadFile.FileName;
-                string fileType = Path.GetExtension(originalFile);
-                string fileName = Guid.NewGuid().ToString();
-                string path = _Environment.WebRootPath + "/files/" + fileName + fileType;
-                await using var fileStream = new FileStream(path, FileMode.Create);
-                await uploadFile.CopyToAsync(fileStream);
+                string originalName = uploadFile.FileName;
+                string originalType = Path.GetExtension(originalName);
+                string key = Guid.NewGuid() + originalType;
+                
+                var fileUrl = await _amazonS3Service.UploadFileAsync(uploadFile, key);
                 
                 FileModel file = new FileModel()
                 {
-                    OriginalName = originalFile,
-                    OriginalType = fileType,
-                    FileName = fileName,
-                    FileUrl = "/files/" + fileName + fileType
+                    OriginalName = originalName,
+                    OriginalType = originalType,
+                    FileName = key,
+                    FileUrl = fileUrl
                 };
 
                 model.Review.File = file;
@@ -160,16 +157,15 @@ public class HomeController : Controller
         return View(viewModel);
     }
     
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         var result = _ReviewRepository.GetReview(id);
         if (result != null)
         {
             if (result.File != null)
             {
-                string filePath = Path.Combine(_Environment.WebRootPath, result.File.FileUrl.TrimStart('/'));
-                if (System.IO.File.Exists(filePath))
-                    System.IO.File.Delete(filePath);
+                await _amazonS3Service.DeleteFileAsync(result.File.FileName);
+                _ReviewRepository.DeleteFile(result.File);
             }
             
             _ReviewRepository.Delete(result);
