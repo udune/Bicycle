@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices.JavaScript;
+
 namespace Bicycle.Models;
 
 public class ReviewTable

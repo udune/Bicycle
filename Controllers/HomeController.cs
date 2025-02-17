@@ -22,12 +22,19 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        return View();
+        var viewModel = new ReviewViewModel();
+        return View(viewModel);
     }
 
-    public IActionResult Review(int pageNumber = 1)
+    public IActionResult Review(int pageNumber = 1, string Search = "")
     {
-        var reviews = _ReviewRepository.GetAllReviews();
+        IEnumerable<Review> reviews;
+        
+        if (!string.IsNullOrEmpty(Search) && Search.Length == 5)
+            reviews = _ReviewRepository.GetFindReviews(Search);
+        else
+            reviews = _ReviewRepository.GetAllReviews();
+        
         var reviewTable = new ReviewTable(
             reviews.OrderByDescending(review => review.Id).Skip((pageNumber - 1) * 10).Take(10).ToList(), 
             new ReviewTablePage(reviews.Count(), pageNumber, 10));

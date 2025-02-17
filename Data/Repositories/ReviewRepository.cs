@@ -39,6 +39,14 @@ public class ReviewRepository : IReviewRepository
         return reviews;
     }
     
+    public IEnumerable<Review> GetFindReviews(string search)
+    {
+        var reviews = _context.Reviews
+            .Where(review => review.Number == search)
+            .OrderByDescending(x => x.Id);
+        return reviews;
+    }
+    
     public void Save()
     {
         _context.SaveChanges();

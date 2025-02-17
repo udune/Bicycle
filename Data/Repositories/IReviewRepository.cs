@@ -8,6 +8,7 @@ public interface IReviewRepository
     Review GetReview(int id);
     FileModel GetFile(int fileId);
     IEnumerable<Review> GetAllReviews();
+    IEnumerable<Review> GetFindReviews(string search);
     void Save();
     void Edit(Review review);
     void Delete(Review review);
