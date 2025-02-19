@@ -1,0 +1,43 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Bicycle.ViewModels.ReviewViewModel
+
+@{
+    ViewBag.Title = "CreateReply";
+    Model.Review.Name = User.Identity.Name;
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.27.3/ui/trumbowyg.min.css">
+
+<form method="POST">
+    <input type="hidden" asp-for="@Model.Review.GroupNum"/>
+    <input type="hidden" asp-for="@Model.Review.GroupOrder"/>
+    <input type="hidden" asp-for="@Model.Review.GroupTap"/>
+    <input type="hidden" asp-for="@Model.Review.ParentId"/>
+    <input type="hidden" asp-for="@Model.Review.Number"/>
+    <input type="hidden" asp-for="@Model.Review.Date"/>
+    <input type="hidden" asp-for="@Model.Review.Rating"/>
+    <div class="form-group" style="margin-bottom: 10px">
+        <label>제목</label>
+        <input type="text" class="form-control" asp-for="@Model.Review.Title" placeholder="답글을 입력해 주세요"/>
+        <span asp-validation-for="@Model.Review.Title"></span>
+    </div>
+    <div class="form-group" style="margin-bottom: 10px">
+        <input type="hidden" class="form-control" asp-for="@Model.Review.Name"/>
+        <span asp-validation-for="@Model.Review.Name"></span>
+    </div>
+    <div class="form-group" style="margin-bottom: 10px">
+        <label>댓글</label>
+        <textarea class="form-control" id="trumbowyg-demo" asp-for="@Model.Review.Contents" placeholder="내용을 입력해 주세요"></textarea>
+        <span asp-validation-for="@Model.Review.Contents"></span>
+    </div>
+    <button type="submit" class="btn btn-primary" style="display: flex; justify-self: end;">올리기</button>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.27.3/trumbowyg.min.js"></script>
+    <script>$('#trumbowyg-demo').trumbowyg();
+    </script>
+}

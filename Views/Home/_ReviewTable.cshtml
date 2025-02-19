@@ -17,26 +17,38 @@
     {
         @foreach (var review in Model.Reviews)
         {
+            var groupTap = review.GroupTap;
+            var groupOrder = review.GroupOrder;
             var action = User.Identity.IsAuthenticated && review.Name == User.Identity.Name ? "Edit" : "Detail";
             <tr class="table-body" style="cursor: pointer;" onclick="location.href='@Url.Action(action, "Home", new { id = review.Id })'">
                 <td class="table-body-item" style="width:10%">@review.Name</td>
-                <td class="table-body-item" style="width:60%">@review.Title</td>
-                <td class="table-body-item" style="width:10%">@review.Number</td>
-                <td class="table-body-item" style="width:10%">@review.Date.ToString("yyyy-MM-dd")</td>
-                <td class="table-body-item" style="width:10%">
-                    @if (review.Rating >= 1 && review.Rating < 5)
+                <td class="table-body-item" style="width:60%">
+                    @while (groupTap > 0)
                     {
-                        <span class="badBadge">Bad @review.Rating</span>
+                        <span style="padding-left: 10px">:[답글]</span>
+                        groupTap--;
                     }
-                    else if (review.Rating >= 5 && review.Rating < 8)
-                    {
-                        <span class="normalBadge">Normal @review.Rating</span>
-                    }
-                    else
-                    {
-                        <span class="goodBadge">Good @review.Rating</span>
-                    }
+                    @review.Title
                 </td>
+                @if (groupOrder == 0)
+                {
+                    <td class="table-body-item" style="width:10%">@review.Number</td>   
+                    <td class="table-body-item" style="width:10%">@review.Date.ToString("yyyy-MM-dd")</td>
+                    <td class="table-body-item" style="width:10%">
+                        @if (review.Rating >= 1 && review.Rating < 5)
+                        {
+                            <span class="badBadge">Bad @review.Rating</span>
+                        }
+                        else if (review.Rating >= 5 && review.Rating < 8)
+                        {
+                            <span class="normalBadge">Normal @review.Rating</span>
+                        }
+                        else
+                        {
+                            <span class="goodBadge">Good @review.Rating</span>
+                        }
+                    </td>
+                }
             </tr>
         }
 

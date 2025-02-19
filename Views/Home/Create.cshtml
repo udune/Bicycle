@@ -20,7 +20,7 @@
     </div>
     <div class="form-group" style="margin-bottom: 10px">
         <label>따릉이 번호</label>
-        <input type="text" class="form-control" asp-for="@Model.Review.Number" placeholder="77777"/>
+        <input type="text" class="form-control" asp-for="@Model.Review.Number" placeholder="12345"/>
         <span asp-validation-for="@Model.Review.Number"></span>
     </div>
     <div class="form-group" style="margin-bottom: 10px">
@@ -30,7 +30,7 @@
     </div>
     <div class="form-group" style="margin-bottom: 10px">
         <label>평점</label>
-        <input type="number" value="9" class="form-control" asp-for="@Model.Review.Rating" placeholder="1 ~ 10"/>
+        <input type="number" class="form-control" asp-for="@Model.Review.Rating" placeholder="1 ~ 10"/>
         <span asp-validation-for="@Model.Review.Rating"></span>
     </div>
     <div class="form-group" style="margin-bottom: 10px">

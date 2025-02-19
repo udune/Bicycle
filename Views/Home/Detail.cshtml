@@ -1,4 +1,7 @@
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Bicycle.ViewModels.ReviewViewModel
+@inject SignInManager<IdentityUser> SignInManager
 
 @{
     ViewBag.Title = "Detail";
@@ -17,21 +20,24 @@
         <input type="text" class="form-control" asp-for="@Model.Review.Name" disabled/>
         <span asp-validation-for="@Model.Review.Name"></span>
     </div>
-    <div class="form-group" style="margin-bottom: 10px">
-        <label>따릉이 번호</label>
-        <input type="text" class="form-control" asp-for="@Model.Review.Number" disabled/>
-        <span asp-validation-for="@Model.Review.Number"></span>
-    </div>
-    <div class="form-group" style="margin-bottom: 10px">
-        <label>이용 날짜</label>
-        <input type="date" class="form-control" asp-for="@Model.Review.Date" disabled/>
-        <span asp-validation-for="@Model.Review.Date"></span>
-    </div>
-    <div class="form-group" style="margin-bottom: 10px">
-        <label>평점</label>
-        <input type="number" value="9" class="form-control" asp-for="@Model.Review.Rating" disabled/>
-        <span asp-validation-for="@Model.Review.Rating"></span>
-    </div>
+    @if (Model.Review.GroupOrder == 0)
+    {
+        <div class="form-group" style="margin-bottom: 10px">
+            <label>따릉이 번호</label>
+            <input type="text" class="form-control" asp-for="@Model.Review.Number" disabled/>
+            <span asp-validation-for="@Model.Review.Number"></span>
+        </div>
+        <div class="form-group" style="margin-bottom: 10px">
+            <label>이용 날짜</label>
+            <input type="date" class="form-control" asp-for="@Model.Review.Date" disabled/>
+            <span asp-validation-for="@Model.Review.Date"></span>
+        </div>
+        <div class="form-group" style="margin-bottom: 10px">
+            <label>평점</label>
+            <input type="number" class="form-control" asp-for="@Model.Review.Rating" disabled/>
+            <span asp-validation-for="@Model.Review.Rating"></span>
+        </div>
+    }
     <div class="form-group" style="margin-bottom: 10px">
         <label>후기</label>
         <textarea class="form-control" id="trumbowyg-demo" asp-for="@Model.Review.Contents" disabled></textarea>
@@ -41,6 +47,14 @@
         <img src="@Model.Review.File.FileUrl" alt=""/>
     </div>
     <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <a class="btn btn-primary" asp-controller="Home" asp-action="CreateReply" 
+               asp-route-parentId="@Model.Review.Id" 
+               asp-route-groupNum="@Model.Review.GroupNum"
+               asp-route-groupOrder="@Model.Review.GroupOrder"
+               asp-route-groupTab="@Model.Review.GroupTap">답글 달기</a>
+        }
         <a class="btn btn-primary" asp-controller="Home" asp-action="Review">뒤로</a>
     </div>
 </form>

@@ -34,14 +34,22 @@ public class HomeController : Controller
             reviews = _ReviewRepository.GetFindReviews(Search);
         else
             reviews = _ReviewRepository.GetAllReviews();
+
+        var adjustReviews = reviews
+            .OrderBy(review => review.GroupNum)
+            .ThenByDescending(review => review.GroupOrder)
+            .ThenBy(review => review.Id)
+            .Reverse()
+            .Skip((pageNumber - 1) * 10)
+            .Take(10).ToList();
         
         var reviewTable = new ReviewTable(
-            reviews.OrderByDescending(review => review.Id).Skip((pageNumber - 1) * 10).Take(10).ToList(), 
-            new ReviewTablePage(reviews.Count(), pageNumber, 10));
+            adjustReviews, 
+            new ReviewTablePage(adjustReviews.Count(), pageNumber, 10));
         
         var viewModel = new ReviewViewModel()
         {
-            Reviews = reviews,
+            Reviews = adjustReviews,
             ReviewTable = reviewTable
         };
         return View(viewModel);
@@ -78,6 +86,7 @@ public class HomeController : Controller
                 model.Review.File = file;
             }
             
+            model.Review.GroupNum = model.Review.Id;
             _ReviewRepository.AddReview(model.Review);
             _ReviewRepository.Save();
             ModelState.Clear();
@@ -87,6 +96,50 @@ public class HomeController : Controller
             ModelState.AddModelError("Create", "Invalid data");
         }
 
+        return RedirectToAction("Review");
+    }
+
+    public IActionResult CreateReply(int parentId, int groupTab, int groupOrder, int groupNum)
+    {
+        var viewModel = new ReviewViewModel()
+        {
+            Review = new Review()
+            {
+                GroupTap = groupTab,
+                GroupOrder = groupOrder,
+                GroupNum = groupNum,
+                ParentId = parentId
+            }
+        };
+        return View(viewModel);
+    }
+    
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult CreateReply(ReviewViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            Review? parent = _ReviewRepository.GetReview(model.Review.ParentId);
+            if (parent == null)
+            {
+                return RedirectToAction("Review");
+            }
+            
+            model.Review.GroupOrder += 1;
+            model.Review.GroupNum = parent.GroupNum;
+            model.Review.ParentId = parent.Id;
+            model.Review.GroupTap += 1;
+            
+            _ReviewRepository.AddReview(model.Review);
+            _ReviewRepository.Save();
+            ModelState.Clear();
+        }
+        else
+        {
+            ModelState.AddModelError("CreateReply", "Invalid data");
+        }
+        
         return RedirectToAction("Review");
     }
 

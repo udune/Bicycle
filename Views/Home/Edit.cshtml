@@ -24,31 +24,62 @@
         <span asp-validation-for="@Model.Review.Name"></span>
     </div>
     <div class="form-group" style="margin-bottom: 10px">
-        <label>따릉이 번호</label>
-        <input type="text" class="form-control" asp-for="@Model.Review.Number"/>
+        @if (Model.Review.GroupOrder == 0)
+        {
+            <label>따릉이 번호</label>
+            <input type="text" class="form-control" asp-for="@Model.Review.Number"/>   
+        }
+        else
+        {
+            <input type="hidden" class="form-control" asp-for="@Model.Review.Number"/>
+        }
         <span asp-validation-for="@Model.Review.Number"></span>
     </div>
     <div class="form-group" style="margin-bottom: 10px">
-        <label>이용 날짜</label>
-        <input type="date" class="form-control" asp-for="@Model.Review.Date"/>
+        @if (Model.Review.GroupOrder == 0)
+        {
+            <label>이용 날짜</label>
+            <input type="date" class="form-control" asp-for="@Model.Review.Date"/>
+        }
+        else
+        {
+            <input type="hidden" class="form-control" asp-for="@Model.Review.Date"/>
+        }
         <span asp-validation-for="@Model.Review.Date"></span>
     </div>
     <div class="form-group" style="margin-bottom: 10px">
-        <label>평점</label>
-        <input type="number" value="9" class="form-control" asp-for="@Model.Review.Rating"/>
+        @if (Model.Review.GroupOrder == 0)
+        {
+            <label>평점</label>
+            <input type="number" class="form-control" asp-for="@Model.Review.Rating"/>    
+        }
+        else
+        {
+            <input type="hidden" class="form-control" asp-for="@Model.Review.Rating"/>
+        }
         <span asp-validation-for="@Model.Review.Rating"></span>
     </div>
     <div class="form-group" style="margin-bottom: 10px">
-        <label>후기</label>
+        @if (Model.Review.GroupOrder == 0)
+        {
+            <label>후기</label>   
+        }
+        else
+        {
+            <label>답글</label>
+        }
         <textarea class="form-control" id="trumbowyg-demo" asp-for="@Model.Review.Contents"></textarea>
         <span asp-validation-for="@Model.Review.Contents"></span>
     </div>
     <div class="form-group" style="margin-bottom: 10px">
         <img src="@Model.Review.File.FileUrl" alt=""/>
     </div>
-    <div style="margin-bottom: 10px">
-        <input type="file" name="UploadFile" id="UploadFile" onchange="fileSize()" value=""/><br/>
-    </div>
+    @if (Model.Review.GroupOrder == 0)
+    {
+        <div style="margin-bottom: 10px">
+            <input type="file" name="UploadFile" id="UploadFile" onchange="fileSize()" value=""/><br/>
+        </div>
+    }
     <div style="display: flex; justify-content: flex-end; gap: 10px;">
         <button type="submit" class="btn btn-primary">수정하기</button>
         <a class="btn btn-primary" asp-controller="Home" asp-action="Delete" asp-route-id="@Model.Review.Id">삭제하기</a>

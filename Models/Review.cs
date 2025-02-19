@@ -7,6 +7,11 @@ public class Review
     [Key]
     public int Id { get; set; }
     
+    public int GroupNum { get; set; }
+    public int GroupOrder { get; set; }
+    public int ParentId { get; set; }
+    public int GroupTap { get; set; }
+    
     [MaxLength(50)]
     [Required]
     public string? Name { get; set; }
@@ -16,17 +21,17 @@ public class Review
     public string? Title { get; set; }
     
     public string? Contents { get; set; }
-    
-    [MaxLength(6)]
-    [Required]
-    public string? Number { get; set; }
+
+    [MaxLength(5)] 
+    [Required] 
+    public string? Number { get; set; } = "12345";
     
     [Required]
     public DateTime Date { get; set; } = DateTime.Now;
-    
-    [Range(1, 10)]
-    [Required]
-    public int Rating { get; set; }
+
+    [Range(1, 10)] 
+    [Required] 
+    public int Rating { get; set; } = 8;
     
     public int FileId { get; set; }
     

@@ -33,6 +33,22 @@ public class ReviewRepository : IReviewRepository
         return file;
     }
 
+    public IEnumerable<Review> GetGroupReviews(Review parent)
+    {
+        var reviews = _context.Reviews.ToList()
+            .Where(r => r.GroupNum == parent.GroupNum);
+            
+        foreach (var review in reviews)
+        {
+            review.GroupOrder += 1;
+            review.GroupNum = parent.GroupNum;
+            review.ParentId = parent.Id;
+            review.GroupTap = parent.GroupTap + 1;
+        }
+
+        return reviews;
+    }
+
     public IEnumerable<Review> GetAllReviews()
     {
         var reviews = _context.Reviews.OrderByDescending(x => x.Id);
@@ -55,6 +71,11 @@ public class ReviewRepository : IReviewRepository
     public void Edit(Review review)
     {
         _context.Update(review);
+    }
+
+    public void EditRange(IEnumerable<Review> reviews)
+    {
+        _context.UpdateRange(reviews);
     }
 
     public void Delete(Review review)

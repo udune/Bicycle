@@ -64,6 +64,15 @@ namespace Bicycle.Migrations
                     b.Property<int>("FileId")
                         .HasColumnType("int");
 
+                    b.Property<int>("GroupNum")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GroupOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GroupTap")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -73,6 +82,9 @@ namespace Bicycle.Migrations
                         .IsRequired()
                         .HasMaxLength(6)
                         .HasColumnType("varchar(6)");
+
+                    b.Property<int>("ParentId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Rating")
                         .HasColumnType("int");
