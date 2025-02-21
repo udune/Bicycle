@@ -32,3 +32,18 @@ h1 {
     font-size: 14px;
     font-weight: 700;
 }
+
+.chatbot-container {
+    position: fixed;
+    padding: 12px;
+    bottom: 80px;
+    right: 20px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

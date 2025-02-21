@@ -46,6 +46,12 @@ public class Program
         builder.Services.AddScoped<UserManager<IdentityUser>>();
         builder.Services.AddScoped<SignInManager<IdentityUser>>();
 
+        builder.Services.AddSignalR().AddHubOptions<MessageHub>(options =>
+        {
+            options.EnableDetailedErrors = true;
+            options.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
+        });
+
         var app = builder.Build();
         
         app.Services.CreateScope().ServiceProvider.GetRequiredService<DBSeeder>().SeedDatabase().Wait();
@@ -73,6 +79,7 @@ public class Program
             .WithStaticAssets();
         app.MapRazorPages()
            .WithStaticAssets();
+        app.MapHub<MessageHub>("/chat");
 
         app.Run();
     }

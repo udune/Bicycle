@@ -10,6 +10,7 @@
 
     <ItemGroup>
         <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true"/>
+        <None Remove="BicycleClient\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -25,6 +26,24 @@
 
     <ItemGroup>
       <Folder Include="wwwroot\files\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="BicycleClient\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="BicycleClient\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="BicycleClient\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="BicycleClient\obj\BicycleClient.csproj.nuget.dgspec.json" />
+      <_ContentIncludedByDefault Remove="BicycleClient\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="BicycleClient\obj\project.packagespec.json" />
     </ItemGroup>
 
 </Project>

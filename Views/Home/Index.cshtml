@@ -1,4 +1,7 @@
-﻿@model Bicycle.ViewModels.ReviewViewModel
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Bicycle.ViewModels.ReviewViewModel
+@inject SignInManager<IdentityUser> SignInManager
 
 @{
     ViewData["Title"] = "Home Page";
@@ -6,7 +9,7 @@
 
 <div class="text-center centerMsg">
     <div class="home_container">
-        <h1 class="display-3">서울 공공 자전거 대여 서비스 <b>따릉이</b>를<br/> 더욱 <b>안전</b> 하게 이용 하자!</h1>
+        <h1 class="display-4">서울 공공 자전거 대여 서비스 <b>따릉이</b>를<br/> 더욱 <b>안전</b> 하게 이용 하자!</h1>
         <form asp-controller="Home" asp-action="Review" method="GET">
             <div class="input_container">
                 <input type="text" class="inputField_search" name="Search" value="@Model.Search" placeholder="따릉이 번호를 검색해주세요. (ex. 32843)"/>
@@ -17,6 +20,16 @@
         </form>
     </div>
 </div>
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="chatbot-container">
+        <div>고장난 따릉이를 신고해주세요.</div>
+        <input type="hidden" id="userid" value="@User.Identity.Name"/>
+        <textarea type="text" style="width: 100%" placeholder="메시지를 입력하세요." id="message"></textarea>
+        <div id="chatlog"></div>
+        <input type="button" class="btn btn-info" style="width: 100%" id="sendbtn" value="보내기"/>
+    </div>
+}
 
 <style>
     .inputField_search {
@@ -32,3 +45,46 @@
         gap: 8px;
     }
 </style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+<script type="text/javascript">
+            const hubConn = new signalR.HubConnectionBuilder()
+                .withUrl("/chat", { transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.ServerSentEvents | signalR.HttpTransportType.LongPolling })
+                .configureLogging(signalR.LogLevel.Debug)
+                .build();
+
+            hubConn.keepAliveIntervalInMilliseconds = 1000 * 15;
+            hubConn.serverTimeoutInMilliseconds = 1000 * 30;
+
+            hubConn.onclose(function (event) {
+                
+            });
+
+            hubConn.start().then(function () {
+                document.getElementById("sendbtn").disabled = false;
+            })
+                .catch(function (e) {
+                    return console.error(e.toString());
+                });
+
+            document.getElementById("sendbtn").addEventListener("click", function () {
+                const userid = document.getElementById("userid").value;
+                const message = document.getElementById("message").value;
+
+                hubConn.invoke("Send", message, userid)
+                    .catch(function (e) {
+                        return console.error(e.toString());
+                    });
+            });
+
+            hubConn.on("receive", function (message, userid) {
+
+                const bElem = document.createElement("b");
+                bElem.textContent = userid + ": ";
+                const pElem = document.createElement("p");
+                pElem.appendChild(bElem);
+                pElem.appendChild(document.createTextNode(message));
+
+                document.getElementById("chatlog").appendChild(pElem);
+            });
+        </script>
