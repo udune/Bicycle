@@ -9,7 +9,7 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.27.3/ui/trumbowyg.min.css">
 
-<form>
+<form class="review-form">
     <div class="form-group" style="margin-bottom: 10px">
         <label>제목</label>
         <input type="text" class="form-control" asp-for="@Model.Review.Title" disabled/>
@@ -43,7 +43,7 @@
         <textarea class="form-control" id="trumbowyg-demo" asp-for="@Model.Review.Contents" disabled></textarea>
         <span asp-validation-for="@Model.Review.Contents"></span>
     </div>
-    <div class="form-group" style="margin-bottom: 10px">
+    <div class="form-group" id="UploadFile" style="margin-bottom: 10px">
         <img src="@Model.Review.File.FileUrl" alt=""/>
     </div>
     <div style="display: flex; justify-content: flex-end; gap: 10px;">

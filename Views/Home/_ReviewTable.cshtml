@@ -1,103 +1,105 @@
 @model Bicycle.ViewModels.ReviewViewModel
 
-<h5>따릉이 사용 후기를 자유롭게 공유해주세요</h5>
-<br/>
-<table style="width: 100%; table-layout: fixed;">
-    <thead>
-    <tr class="table-header">
-        <th class="table-header-item" style="width:10%;">이름</th>
-        <th class="table-header-item" style="width:60%;">제목</th>
-        <th class="table-header-item" style="width:10%;">번호</th>
-        <th class="table-header-item" style="width:10%;">날짜</th>
-        <th class="table-header-item" style="width:10%;">평점</th>
-    </tr>
-    </thead>
-    <tbody>
-    @if (Model.Reviews.Any())
-    {
-        @foreach (var review in Model.Reviews)
+<div class="table-container">
+    <h5>따릉이 사용 후기를 자유롭게 공유해주세요</h5>
+    <br/>
+    <table style="width: 100%; table-layout: fixed;">
+        <thead>
+        <tr class="table-header">
+            <th class="table-header-item" style="width:10%;">이름</th>
+            <th class="table-header-item" style="width:60%;">제목</th>
+            <th class="table-header-item" style="width:10%;">번호</th>
+            <th class="table-header-item" style="width:10%;">날짜</th>
+            <th class="table-header-item" style="width:10%;">평점</th>
+        </tr>
+        </thead>
+        <tbody>
+        @if (Model.Reviews.Any())
         {
-            var groupTap = review.GroupTap;
-            var groupOrder = review.GroupOrder;
-            var action = User.Identity.IsAuthenticated && review.Name == User.Identity.Name ? "Edit" : "Detail";
-            <tr class="table-body" style="cursor: pointer;" onclick="location.href='@Url.Action(action, "Home", new { id = review.Id })'">
-                <td class="table-body-item" style="width:10%">@review.Name</td>
-                <td class="table-body-item" style="width:60%">
-                    @while (groupTap > 0)
-                    {
-                        <span style="padding-left: 10px">:[답글]</span>
-                        groupTap--;
-                    }
-                    @review.Title
-                </td>
-                @if (groupOrder == 0)
-                {
-                    <td class="table-body-item" style="width:10%">@review.Number</td>   
-                    <td class="table-body-item" style="width:10%">@review.Date.ToString("yyyy-MM-dd")</td>
-                    <td class="table-body-item" style="width:10%">
-                        @if (review.Rating >= 1 && review.Rating < 5)
+            @foreach (var review in Model.Reviews)
+            {
+                var groupTap = review.GroupTap;
+                var groupOrder = review.GroupOrder;
+                var action = User.Identity.IsAuthenticated && review.Name == User.Identity.Name ? "Edit" : "Detail";
+                <tr class="table-body" style="cursor: pointer;" onclick="location.href='@Url.Action(action, "Home", new { id = review.Id })'">
+                    <td class="table-body-item" style="width:10%">@review.Name</td>
+                    <td class="table-body-item" style="width:60%">
+                        @while (groupTap > 0)
                         {
-                            <span class="badBadge">Bad @review.Rating</span>
+                            <span style="padding-left: 10px">:[답글]</span>
+                            groupTap--;
                         }
-                        else if (review.Rating >= 5 && review.Rating < 8)
+                        @review.Title
+                    </td>
+                    @if (groupOrder == 0)
+                    {
+                        <td class="table-body-item" style="width:10%">@review.Number</td>
+                        <td class="table-body-item" style="width:10%">@review.Date.ToString("yyyy-MM-dd")</td>
+                        <td class="table-body-item" style="width:10%">
+                            @if (review.Rating >= 1 && review.Rating < 5)
+                            {
+                                <span class="badBadge">Bad @review.Rating</span>
+                            }
+                            else if (review.Rating >= 5 && review.Rating < 8)
+                            {
+                                <span class="normalBadge">Normal @review.Rating</span>
+                            }
+                            else
+                            {
+                                <span class="goodBadge">Good @review.Rating</span>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+
+            <tr>
+                <td colspan="5">
+                    <div class="paginationContainer">
+                        @if (Model.ReviewTable.ReviewTablePage.HasPreviousPage)
                         {
-                            <span class="normalBadge">Normal @review.Rating</span>
+                            <a asp-controller="Home" asp-action="Review" asp-route-pageNumber="@(Model.ReviewTable.ReviewTablePage.PageNumber - 1)">
+                                <div class="paginationArrow-button prev"></div>
+                            </a>
                         }
                         else
                         {
-                            <span class="goodBadge">Good @review.Rating</span>
+                            <a asp-controller="Home" asp-action="Review" asp-route-pageNumber="1">
+                                <div class="paginationArrow-button prev"></div>
+                            </a>
                         }
-                    </td>
-                }
+
+                        @for (var i = 1; i <= Model.ReviewTable.ReviewTablePage.TotalPage; i++)
+                        {
+                            var selectPage = i;
+                            var type = Model.ReviewTable.ReviewTablePage.PageNumber == selectPage ? "selected" : "default";
+                            <button class="pageButton @type" onclick="location.href='@Url.Action("Review", "Home", new { pageNumber = selectPage })'">@i</button>
+                        }
+                        @* <review-table-page page-model="@Model.ReviewTable.ReviewTablePage" paging-action="Index"></review-table-page> *@
+
+                        @if (Model.ReviewTable.ReviewTablePage.HasNextPage)
+                        {
+                            <a asp-controller="Home" asp-action="Review" asp-route-pageNumber="@(Model.ReviewTable.ReviewTablePage.PageNumber + 1)">
+                                <div class="paginationArrow-button next"></div>
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Home" asp-action="Review" asp-route-pageNumber="@(Model.ReviewTable.ReviewTablePage.TotalPage)">
+                                <div class="paginationArrow-button next"></div>
+                            </a>
+                        }
+                    </div>
+                </td>
             </tr>
         }
+        else
+        {
+            <tr>
+                <td class="emptyText" colspan="5">조회할 수 있는 데이터가 없습니다.</td>
+            </tr>
+        }
+        </tbody>
 
-        <tr>
-            <td colspan="5">
-                <div class="paginationContainer">
-                    @if (Model.ReviewTable.ReviewTablePage.HasPreviousPage)
-                    {
-                    <a asp-controller="Home" asp-action="Review" asp-route-pageNumber="@(Model.ReviewTable.ReviewTablePage.PageNumber - 1)">
-                        <div class="paginationArrow-button prev"></div>
-                    </a>
-                    }
-                    else
-                    {
-                    <a asp-controller="Home" asp-action="Review" asp-route-pageNumber="1">
-                        <div class="paginationArrow-button prev"></div>
-                    </a>
-                    }
-
-                    @for (var i = 1; i <= Model.ReviewTable.ReviewTablePage.TotalPage; i++)
-                    {
-                    var selectPage = i;
-                    var type = Model.ReviewTable.ReviewTablePage.PageNumber == selectPage ? "selected" : "default";
-                    <button class="pageButton @type" onclick="location.href='@Url.Action("Review", "Home", new { pageNumber = selectPage })'">@i</button>
-                    }
-                    @* <review-table-page page-model="@Model.ReviewTable.ReviewTablePage" paging-action="Index"></review-table-page> *@
-
-                    @if (Model.ReviewTable.ReviewTablePage.HasNextPage)
-                    {
-                    <a asp-controller="Home" asp-action="Review" asp-route-pageNumber="@(Model.ReviewTable.ReviewTablePage.PageNumber + 1)">
-                        <div class="paginationArrow-button next"></div>
-                    </a>
-                    }
-                    else
-                    {
-                    <a asp-controller="Home" asp-action="Review" asp-route-pageNumber="@(Model.ReviewTable.ReviewTablePage.TotalPage)">
-                        <div class="paginationArrow-button next"></div>
-                    </a>
-                    }
-                </div>
-            </td>
-        </tr>
-    }
-    else
-    {
-        <tr>
-            <td class="emptyText" colspan="5">조회할 수 있는 데이터가 없습니다.</td>
-        </tr>
-    }
-    </tbody>
-
-</table>
+    </table>
+</div>

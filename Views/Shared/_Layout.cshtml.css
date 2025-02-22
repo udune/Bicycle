@@ -46,3 +46,33 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 10px;
+  }
+  
+  .navbar-brand {
+    font-size: 1rem;
+    white-space: nowrap;
+  }
+  
+  .navbar-toggler {
+    border: none;
+  }
+  
+  .nav-link {
+    font-size: 14px;
+    padding: 8px;
+  }
+  
+  .container {
+    padding: 10px;
+  }
+  
+  .footer {
+    font-size: 12px;
+    line-height: 40px;
+    padding: 10px 0;
+  }
+}

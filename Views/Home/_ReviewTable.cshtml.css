@@ -1,6 +1,12 @@
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
 .table {
     gap: 10px;
     width: 100%;
+    table-layout: fixed;
 }
 
 .table-header {
@@ -12,7 +18,7 @@
     font-weight: 700;
     font-size: 14px;
     padding: 16px 12px;
-    white-space: nowrap;
+    white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -30,42 +36,33 @@
     font-weight: 400;
     font-size: 14px;
     padding: 16px 8px;
-    white-space: nowrap;
+    white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.goodBadge {
+.goodBadge, .normalBadge, .badBadge {
     width: 61px;
     height: 28px;
     border-radius: 4px;
-    padding: 6px 12px 6px 12px;
-    background-color: rgba(0, 153, 255, 0.15);
-    color: #0099ff;
+    padding: 6px 12px;
     font-size: 14px;
     font-weight: 700;
+}
+
+.goodBadge {
+    background-color: rgba(0, 153, 255, 0.15);
+    color: #0099ff;
 }
 
 .normalBadge {
-    width: 61px;
-    height: 28px;
-    border-radius: 4px;
-    padding: 6px 12px;
     background-color: rgba(133, 133, 133, 0.15);
     color: #999999;
-    font-size: 14px;
-    font-weight: 700;
 }
 
 .badBadge {
-    width: 61px;
-    height: 28px;
-    border-radius: 4px;
-    padding: 6px 12px;
     background-color: rgba(255, 34, 34, 0.15);
     color: #ff2222;
-    font-size: 14px;
-    font-weight: 700;
 }
 
 .emptyText {
@@ -76,11 +73,11 @@
 }
 
 .paginationContainer {
-    display: flex; /* 플렉스 박스로 설정 */
-    justify-content: center; /* 자식 요소를 가로로 중앙 정렬 */
-    align-items: center; /* 자식 요소를 세로로 중앙 정렬 */
-    gap: 8px; /* 버튼 간의 간격 */
-    margin-top: 16px; /* 위쪽 여백 추가 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
 }
 
 .paginationArrow-button {
@@ -103,7 +100,6 @@
 }
 
 .pageButton {
-    background-image: none;
     background-color: transparent;
     border: none;
     font-size: 14px;
@@ -119,4 +115,35 @@
 .selected {
     color: #0099FF;
     font-weight: 700;
+}
+
+@media screen and (max-width: 768px) {
+    .table-body {
+        gap: 10px;
+    }
+    
+    .table-header-item, .table-body-item {
+        font-size: 12px;
+        padding: 10px 6px;
+    }
+
+    .paginationContainer {
+        gap: 5px;
+    }
+
+    .pageButton {
+        font-size: 12px;
+    }
+
+    .paginationArrow-button {
+        width: 6px;
+        height: 12px;
+    }
+
+    .goodBadge, .normalBadge, .badBadge {
+        font-size: 12px;
+        padding: 4px 8px;
+        width: auto;
+        height: auto;
+    }
 }
